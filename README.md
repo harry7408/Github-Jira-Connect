@@ -1,0 +1,1 @@
+# Github Repository와 Jira Project 연결

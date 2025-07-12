@@ -1,0 +1,56 @@
+name: '이슈 생성'
+description: 'Jira와 연동되는 ISSUE'
+labels: [order]
+title: '이슈 제목 작성'
+body:
+  - type: input
+    id: parentKey
+    attributes:
+      label: '상위 작업 Ticket Number'
+      description: '상위 작업의 Ticket Number 기입'
+      placeholder: 'ABC-X' # 앞에 접두어로 Jira Project Key 값 입력
+    validations: # 필수 사항인지 아닌지 설정
+      required: true
+
+  - type: input
+    id: description
+    attributes:
+      label: '이슈 내용(Description)'
+      description: '이슈에 대한 간단한 설명'
+      value: |
+        - Ex) 깃허브 저장소와 Jira 프로젝트 연결
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: '상세 내용(Details)'
+      description: '이슈에 대한 자세한 설명 및 논의 할 내용'
+      value: |
+        - Ex) Atlassian 사에서 만든 Github for Atlassian 앱 이용
+        - ~~~
+    validations:
+      required: true
+
+  - type: textarea
+    id: tasks
+    attributes:
+      label: '체크리스트(Tasks)'
+      description: '해당 이슈에 대해 필요한 작업목록을 작성해주세요'
+      value: |
+        - [ ] ex)
+        - [ ] 작업1
+        - [ ] 작업2
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: '참조(References)'
+      description: '이슈와 관련된 래퍼런스'
+      value: |
+        - Ex) 블로그 링크 참조, 공식문서 참조
+    validations:
+      required: false

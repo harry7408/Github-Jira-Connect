@@ -88,7 +88,7 @@ jobs:
         uses: actions-cool/issues-helper@v3
         with:
           actions: 'update-issue'
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_PAT }}
           title: '[${{ steps.create.outputs.issue }}] ${{ github.event.issue.title }}'
 
       # Jira 링크 연결하는 댓글 추가
@@ -96,7 +96,7 @@ jobs:
         uses: actions-cool/issues-helper@v3
         with:
           actions: 'create-comment'
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_PAT }}
           issue-number: $${ github.event.issue.number }}
           body: "Jira Issue Created: [${{ steps.create.outputs.issue }}](${{ secrets.JIRA_BASE_URL }}/browse/${{ steps.create.outputs.issue }})"
 

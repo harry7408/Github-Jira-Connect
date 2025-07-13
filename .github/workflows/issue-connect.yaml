@@ -58,7 +58,7 @@ jobs:
         uses: atlassian/gajira-create@v3
         with:
           # 연동 할 Jira Project Key 값 입력
-          project: GIT
+          project: ABC
           # 이슈 타입 선택 (이 부분에 들어갈 값이 Custom 등 하는 것에 따라 달라지는 것 같다)
           issuetype: Task
           summary: "${{ github.event.issue.title }}"

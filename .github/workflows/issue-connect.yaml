@@ -33,7 +33,7 @@ jobs:
         uses: stefanbuck/github-issue-parser@v3
         id: issue-parser
         with:
-          template-path: .github/template/issue_form.yaml
+          template-path: .github/ISSUE_TEMPLATE/issue_form.yaml
 
       # 이슈 파싱을 잘 했는지 확인하는 로그 출력
       - name: Log Issue Parser

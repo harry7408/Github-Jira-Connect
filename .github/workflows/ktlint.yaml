@@ -1,40 +1,32 @@
-name: Ktlint Check
+name: KtLint Check
+
 on:
   pull_request:
-    path:
-      - 'app/**/*.kt'
-      - 'app/**/*.kts'
-      - 'build.gradle'
+    branches: [ main ]
+    paths:
       - '**/*.kt'
+      - '**/*.kts'
+      - 'build.gradle*'
+      - 'settings.gradle*'
+  push:
+    branches: [ main ]
 
 jobs:
   ktlint:
-    name: Run KtLint
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '21'
 
-      - name: Cache Gradle and Ktlint
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+      # Gradle 캐싱 및 환경 준비를 한 줄로 처리
+      - uses: gradle/actions/setup-gradle@v3
 
-      - name: Run Ktlint via Gradle
-        run: ./gradlew ktLintCheck --no-daemon
-
-      - name: Publish Ktlint Report
-        if: failure()
-        uses: actions/upload-artifact@v3
-        with:
-          name: ktlint-report
-          path: app/build/reports/ktlint/
+      - name: Run KtLint
+        run: ./gradlew ktlintCheck --continue

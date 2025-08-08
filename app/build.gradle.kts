@@ -38,6 +38,12 @@ android {
     buildFeatures {
         compose = true
     }
+
+    ktlint {
+        disabledRules.set(
+            setOf("binary-expression-wrapping", "multiline-expression-wrapping")
+        )
+    }
 }
 
 

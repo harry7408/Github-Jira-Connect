@@ -13,7 +13,7 @@ subprojects {
 
     // 선택: 세부 옵션
     configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
-        version.set("1.7.0")      // ktlint CLI 엔진 버전 고정 (생략 가능)
+        version.set("1.7.1")      // ktlint CLI 엔진 버전 고정 (생략 가능)
         android.set(true)         // Android Kotlin 스타일 적용
         reporters {               // CI에서 읽기 쉬운 리포트 형식 추가
             reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN)

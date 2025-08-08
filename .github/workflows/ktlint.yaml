@@ -32,7 +32,9 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-
+      - uses: gradle/gradle-build-actions@v4
+        with:
+          gradle-version: 8.7
 
       - name: Run ktlint
         run: ./gradlew ktlintCheck --no-daemon --continue

@@ -2,31 +2,45 @@ name: KtLint Check
 
 on:
   pull_request:
-    branches: [ main ]
     paths:
       - '**/*.kt'
       - '**/*.kts'
-      - 'build.gradle*'
-      - 'settings.gradle*'
-  push:
-    branches: [ main ]
+      - '**/*.gradle*'
+      - 'gradle/wrapper/**'
 
 jobs:
   ktlint:
     runs-on: ubuntu-latest
 
+
+    permissions:
+      contents: read
+      pull-requests: write
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
 
-      - name: Set up JDK
-        uses: actions/setup-java@v4
+      - uses: actions/checkout@v4
+
+
+      - uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '21'
+          cache: gradle
 
-      # Gradle 캐싱 및 환경 준비를 한 줄로 처리
-      - uses: gradle/actions/setup-gradle@v3
 
-      - name: Run KtLint
-        run: ./gradlew ktlintCheck --continue
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+
+
+      - name: Run ktlint
+        run: ./gradlew ktlintCheck --no-daemon --continue
+
+
+      - name: Upload ktlint report
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: ktlint-report
+          path: '**/build/reports/ktlint/*'

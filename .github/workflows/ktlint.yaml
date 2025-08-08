@@ -1,5 +1,7 @@
 name: KtLint Check
 
+# Pull Request 생성 및 Update시 Workflow가 Trigger되며
+# gradlew, wrapper, kotlin 파일이 바뀌었을 때만 실행하여 CI 비용 절감
 on:
   pull_request:
     paths:
@@ -8,39 +10,53 @@ on:
       - '**/*.gradle*'
       - 'gradle/wrapper/**'
 
+# 실행 환경 설정
 jobs:
   ktlint:
     runs-on: ubuntu-latest
 
-
+    # 권한 설정
     permissions:
       contents: read
       pull-requests: write
 
+    # 코드 가져오기 (Workflow가 소스 트리를 사용할 수 있도록 checkout)
     steps:
-
       - uses: actions/checkout@v4
 
-
+      # Temurin jdk 21 버전을 설치하고 캐싱을 자동화
       - uses: actions/setup-java@v4
         with:
-          distribution: temurin
+          distribution: 'temurin'
           java-version: '21'
           cache: gradle
 
-
+      # gradlew 스크립트가 Permission Denied 되지 않도록 실행 옵션 부여
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
+      # gradle-wrapper.jar 파일을 검증
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v4
 
+      # 과거 workflow 호환용으로 두거나 세밀한 cache 작업 시 필요
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
 
+      # ./gradlew ktlintCheck로 Ktlint 플러그인이 모든 Source Set을 스캔
+      # 규칙 위반 시 빌드 실패 -> merge 전에 모든 규칙을 만족하도록 조정
       - name: Run ktlint
-        run: ./gradlew ktlintCheck --no-daemon --continue
+        run: ./gradlew ktlintCheck
 
-
+      # build/reports/ktlint/** 디렉토리를 아티펙트로 업로드해 결과를 볼 수 있도록 한다
       - name: Upload ktlint report
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ktlint-report
-          path: '**/build/reports/ktlint/*'
+          path: |
+            build/reports/ktlint
